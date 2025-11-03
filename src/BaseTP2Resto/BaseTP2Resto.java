@@ -22,7 +22,7 @@ public class BaseTP2Resto {
 	 */
 	HashMap<String, ArrayList<String>> menu = new HashMap<String, ArrayList<String>>();
 	HashMap<String, String> messages = new HashMap<String, String>();
-	HashMap<Integer, ArrayList<String>> orders = new HashMap<Integer, ArrayList<String>>();
+	HashMap<Integer, HashMap<String, Integer>> orders = new HashMap<Integer, HashMap<String, Integer>>();
 	
 	/**
 	 * Constructor
@@ -39,7 +39,7 @@ public class BaseTP2Resto {
 		this.messages.put("sideDishChoice", "accompagnements");
 		this.messages.put("drinkChoice", "boissons");
 		this.messages.put("desertChoice", "desserts");
-		this.messages.put("askChoice", "Que souhaitez-vous comme ### ? [saisir le chiffre correspondant]");
+		this.messages.put("askChoice", "Que souhaitez-vous comme %s ? [saisir le chiffre correspondant]");
 		this.messages.put("recap", "Résumé de la commande ");
 		/**
 		 * Fill the lists of dishes by type
@@ -112,19 +112,23 @@ public class BaseTP2Resto {
 	}
 	public void makeCommand(int numOrder) {
 		ArrayList<String> msgToDisplay = new ArrayList<String>();
+		HashMap<String, Integer> addDish = new HashMap<String, Integer>();
+		int chosenDish = 0;
 		msgToDisplay.add("nbOrder");
 		msgToDisplay.add(String.valueOf(numOrder));
 		this.displayMsg(msgToDisplay);
 		msgToDisplay.clear();
-		
+		chosenDish = this.choiceDish("ENTREES");
+		addDish.put("ENTREES", chosenDish);
+		this.orders.put(1, addDish);
 	}
 	
-	public int choiceDish(String typeDish) {
+	public Integer choiceDish(String typeDish) {
 		ArrayList<String> msgToDisplay = new ArrayList<String>();
 		int numDish = 0;
+		Scanner scan = new Scanner(System.in);
 		String dishMsg = this.messages.get("askChoice");
-		System.out.println(this.messages.get("starterChoice"));
-		dishMsg.replace("###", this.messages.get("starterChoice"));
+		dishMsg = String.format(dishMsg, this.messages.get("starterChoice"));
 		msgToDisplay.add("dishesChoice");
 		msgToDisplay.add(typeDish);
 		this.displayMsg(msgToDisplay);
@@ -137,7 +141,25 @@ public class BaseTP2Resto {
 		this.displayMsg(msgToDisplay);
 		msgToDisplay.clear();
 		System.out.println(dishMsg);
-		return 0;
+		// TODO Scanner doesn't wait for an input
+		if(scan.hasNextInt()){
+			numDish = scan.nextInt();
+		}
+		scan.close();
+		return numDish;
+	}
+	
+	/**
+	 * 
+	 * Display an order
+	 * @param numOrder : number of the order to display
+	 */
+	public void displayOrder(int numOrder) {
+		String dispDish = "";
+		for(int i = 0; i < this.orders.get(numOrder).size(); i++) {
+			dispDish += this.orders.get(numOrder).toString();
+		}
+		System.out.println(dispDish);
 	}
 	/**
 	 * @param args
@@ -147,7 +169,7 @@ public class BaseTP2Resto {
 		int numOrd = 0;
 		numOrd = newOrd.beginNewOrd();
 		newOrd.makeCommand(numOrd);
-		newOrd.choiceDish("ENTREES");
+		newOrd.displayOrder(numOrd);
 	}
 
 }
