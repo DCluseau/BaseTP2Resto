@@ -23,6 +23,7 @@ public class BaseTP2Resto {
 	HashMap<String, ArrayList<String>> menu = new HashMap<String, ArrayList<String>>();
 	HashMap<String, String> messages = new HashMap<String, String>();
 	HashMap<Integer, HashMap<String, Integer>> orders = new HashMap<Integer, HashMap<String, Integer>>();
+	static Scanner scan = new Scanner(System.in);
 	
 	/**
 	 * Constructor
@@ -102,12 +103,12 @@ public class BaseTP2Resto {
 	 */
 	public int beginNewOrd() {
 		int nbOrd = 0;
-		Scanner scan = new Scanner(System.in);
+		//Scanner scan = new Scanner(System.in);
 		ArrayList<String> msgToDisplay = new ArrayList<String>();
 		msgToDisplay.add("welcome");
 		this.displayMsg(msgToDisplay);
 		nbOrd = scan.nextInt();
-		scan.close();
+		//scan.close();
 		return nbOrd;
 	}
 	public void makeCommand(int numOrder) {
@@ -126,7 +127,7 @@ public class BaseTP2Resto {
 	public Integer choiceDish(String typeDish) {
 		ArrayList<String> msgToDisplay = new ArrayList<String>();
 		int numDish = 0;
-		Scanner scan = new Scanner(System.in);
+		//Scanner scan = new Scanner(System.in);
 		String dishMsg = this.messages.get("askChoice");
 		dishMsg = String.format(dishMsg, this.messages.get("starterChoice"));
 		msgToDisplay.add("dishesChoice");
@@ -142,10 +143,10 @@ public class BaseTP2Resto {
 		msgToDisplay.clear();
 		System.out.println(dishMsg);
 		// TODO Scanner doesn't wait for an input
-		if(scan.hasNextInt()){
+		if(scan.next() == ""){
 			numDish = scan.nextInt();
 		}
-		scan.close();
+		//scan.close();
 		return numDish;
 	}
 	
@@ -167,9 +168,11 @@ public class BaseTP2Resto {
 	public static void main(String[] args) {
 		BaseTP2Resto newOrd = new BaseTP2Resto();
 		int numOrd = 0;
+		
 		numOrd = newOrd.beginNewOrd();
 		newOrd.makeCommand(numOrd);
 		newOrd.displayOrder(numOrd);
+		scan.close();
 	}
 
 }
